@@ -139,33 +139,36 @@ class ModelGenerator_Generator
             $namer = new ModelGenerator_Namer($moduleName, $tableName);
             $dirs = $this->_prepareDirectories($namer, $moduleName);
 
-            // render and save base model class
-            $baseModel = new ModelGenerator_BaseModel(
-                array(
-                    'tableName' => $tableName,
-                    'moduleName' => $moduleName,
-                    'config' => $configContainer,
-                    'docblock' => $this->_config->docblock,
-                ),
-                $namer
+            $options = array(
+                'tableName' => $tableName,
+                'moduleName' => $moduleName,
+                'config' => $configContainer,
+                'docblock' => $this->_config->docblock,
             );
+
+            // render and save base model class
+            $baseModel = new ModelGenerator_BaseModel($options, $namer);
 
             $classBody = $baseModel->generate();
             $this->saveFile($classBody, $dirs['BaseModel'], $namer->formatFilename($configContainer->base->filename));
 
             // render and save base mapper class
-            $baseMapper = new ModelGenerator_BaseMapper(
-                array(
-                    'tableName' => $tableName,
-                    'moduleName' => $moduleName,
-                    'config' => $configContainer,
-                    'docblock' => $this->_config->docblock,
-                ),
-                $namer
-            );
+            $baseMapper = new ModelGenerator_BaseMapper($options, $namer);
 
             $classBody = $baseMapper->generate();
             $this->saveFile($classBody, $dirs['BaseMapper'], $namer->formatFilename($configContainer->baseMapper->filename));
+
+            // render and save mapper class
+            $mapper = new ModelGenerator_Mapper($options, $namer);
+
+            $classBody = $mapper->generate();
+            $this->saveFile($classBody, $dirs['Mapper'], $namer->formatFilename($configContainer->mapper->filename), true);
+
+            // render and save model class
+            $model = new ModelGenerator_Model($options, $namer);
+
+            $classBody = $model->generate();
+            $this->saveFile($classBody, $dirs['Model'], $namer->formatFilename($configContainer->filename), true);
         }
 
         return true;
@@ -227,13 +230,20 @@ class ModelGenerator_Generator
      * @param string $contents
      * @param string $dir
      * @param string $filename
+     * @param bool $checkIfDoesNotExist
      */
 
-    private function saveFile($contents, $dir, $filename)
+    private function saveFile($contents, $dir, $filename, $checkIfDoesNotExist = false)
     {
         $destination = rtrim($dir, '/\\') . '/' . $filename;
 
-        $status = file_put_contents($destination, $contents);
+        if(true === $checkIfDoesNotExist) {
+            if(file_exists($destination)) {
+                return;
+            }
+        }
+
+        file_put_contents($destination, $contents);
         chmod($destination, (!empty($this->_config->file->permission))
             ? octdec($this->_config->file->permission)
             : 0644

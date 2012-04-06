@@ -54,12 +54,13 @@ class ModelGenerator_BaseMapper
     }
 
     /**
-     * Generate and save table models
+     * Generate class
      * @return string generated source code
      */
 
     public function generate()
     {
+        $table = new ModelGenerator_Table_Table($this->_options['tableName']);
         $className = $this->_getNamer()->formatClassName($this->_config->baseMapper->classname);
 
         $templates = array(
@@ -69,20 +70,48 @@ class ModelGenerator_BaseMapper
         foreach ($this->_options['docblock'] as $tag => $value)
             $templates['tags'][] = array('name' => $tag, 'description' => $value);
 
+        $methods = array();
+        $tableReferences = array();
 
+        foreach ($table->getUniqueKeys() as $key){
 
-        $modelBase = new Zend_CodeGenerator_Php_Class(array(
+            $methods[] = new Zend_CodeGenerator_Php_Method(array(
+                'name' => 'findBy'.$this->_getNamer()->formatMethodName($key),
+                'docblock' => new Zend_CodeGenerator_Php_Docblock(array(
+                    'tags' => array(
+                        new Zend_CodeGenerator_Php_Docblock_Tag_Param(array(
+                            'paramName' => $key, 'dataType' => 'mixed',
+                        )),
+                        array('name' => 'return', 'description' => $this->_getNamer()->formatClassName($this->_config->classname)),
+                    ),
+                )),
+                'parameters' => array(
+                    array('name' => $key),
+                ),
+                'body' => 'return $this->findOne(array(\''.$key.' = ?\' => $' . $key . '));',
+            ));
+        }
+
+        $modelTableBase = new Zend_CodeGenerator_Php_Class(array(
             'name' => $className,
             'docblock' => new Zend_CodeGenerator_Php_Docblock(array(
                 'shortDescription' => $className . PHP_EOL . '*DO NOT* edit this file.',
-                'tags' => $templates['tags'],
+                'tags' => array_merge($templates['tags']),
             )),
+            'extendedClass' => 'Zend_Db_Table_Abstract',
+            'properties' => array(
+
+                array('name' => '_name', 'visiblity' => 'protected', 'defaultValue' => $table->getName()),
+                array('name' => '_primary', 'visiblity' => 'protected', 'defaultValue' => $table->getPrimary()),
+                array('name' => '_dependantTables', 'visiblity' => 'protected', 'defaultValue' => $table->getDependantTables()),
+            ),
+            'methods' => $methods,
         ));
 
-        $modelBaseFile = new Zend_CodeGenerator_Php_File(array(
-            'classes' => array($modelBase),
+        $modelTableBaseFile = new Zend_CodeGenerator_Php_File(array(
+            'classes' => array($modelTableBase),
         ));
 
-        return $modelBaseFile->generate();
+        return $modelTableBaseFile->generate();
     }
 }

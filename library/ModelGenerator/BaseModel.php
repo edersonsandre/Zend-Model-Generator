@@ -54,7 +54,7 @@ class ModelGenerator_BaseModel
     }
 
     /**
-     * Generate and save table models
+     * Generate class
      * @return string generated source code
      */
 
