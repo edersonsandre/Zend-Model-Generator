@@ -5,6 +5,7 @@
  * @author Jacek Kobus <kobus.jacek@gmail.com>
  * @version $Id: Analyser.php 22 2011-11-22 11:16:42Z kobus.jacek@gmail.com $
  */
+
 class ModelGenerator_Table_Analyser
 {
 
