@@ -1,0 +1,44 @@
+Zend Db Model Adapter
+=============================
+
+This mini project is a good start for every ZF 1.11+ (not ready for ZF 2.0) developer to create base model entities
+from defined tables so you don't need to waste Your time writing getters and setters for each table.
+
+How it works
+-------------------------------------------
+
+Place this project repository as a GIT or SVN submodule in your project's repository, say ~/project_root/model-generator.
+Edit config.ini to fit your needs. Mostly you will need to change only docblock and table entries. The script will read
+your application.ini file and will try to use default db adapter and it's parameters of [development : production]
+section.
+
+Once your config.ini is configured, you can run model-generator.php in CLI mode.
+I.e.: php model-generator/model-generator.php
+
+More about table.<something> entries
+-------------------------------------------
+
+It's pretty self explanatory. You have to manually register each database table from which model entity and mapper will
+be created.
+
+The structure:
+table.profiles = users
+          ^        ^
+          |        |
+     your table  module where the model will be created
+
+If you leave the module value empty for the specific table then the model will be placed under application/models.
+
+Author
+-------------------------------------------
+Author of this repo is Laurynas Karvelis <laurynas.karvelis@gmail.com>
+The license is located at http://sam.zoy.org/wtfpl/COPYING
+
+Huge chunks of code used in this project are borrowed from Jacek Kobus <jacekkobus.com>.
+You will find his original project at http://code.google.com/p/zend-model-generator/
+
+As I wasn't very happy with the structure of his model structure eventually I decided to create my own to fit my needs.
+If you will have any questions, ideas etc, you are welcome to contact me :)
+
+Hope I will help with this project someone else :)
+Have a BEAUTIFUL AND CHEERFUL LIFE! :)
