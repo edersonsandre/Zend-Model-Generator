@@ -160,13 +160,15 @@ class ModelGenerator_BaseModel
                 ));
         }
 
-        $toArrayBody = '$data = array();' . PHP_EOL;
+        $toArrayBody[] = '$data = array(';
 
         foreach($table->getProperties() as $property) {
-            $toArrayBody[] = '$data[\'' . $property['name'] . '\'] = $this->_' . $property['name'] . ';' . PHP_EOL;
+            $toArrayBody[] = "\t" . '\'' . $property['name'] . '\' => $this->_' . $property['name'] . ',';
         }
 
-        $toArrayBody[] = PHP_EOL;
+        $toArrayBody[] = ');';
+        $toArrayBody[] = '';
+        $toArrayBody[] = 'return $data;';
 
         $methods[] = new Zend_CodeGenerator_Php_Method(
             array(
@@ -182,8 +184,7 @@ class ModelGenerator_BaseModel
                           ),
                      )),
                  'parameters' => array(),
-                 'body'       => $toArrayBody,
-                 'return $data;',
+                 'body'       => implode(PHP_EOL, $toArrayBody),
             ));
 
         $modelBase = new Zend_CodeGenerator_Php_Class(
