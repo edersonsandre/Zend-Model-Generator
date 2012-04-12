@@ -163,7 +163,7 @@ class ModelGenerator_BaseModel
         $toArrayBody = '$data = array();' . PHP_EOL;
 
         foreach($table->getProperties() as $property) {
-            $toArrayBody[] = '$data[\'\'] = $this->_' . $property['name'] . ';' . PHP_EOL;
+            $toArrayBody[] = '$data[\'' . $property['name'] . '\'] = $this->_' . $property['name'] . ';' . PHP_EOL;
         }
 
         $toArrayBody[] = PHP_EOL;
