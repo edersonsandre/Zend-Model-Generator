@@ -2,8 +2,8 @@
 
 /**
  * Model Generator
- * @author Laurynas Karvelis <laurynas.karvelis@gmail.com>
- * @author Explosive Brains Limited
+ * @author  Laurynas Karvelis <laurynas.karvelis@gmail.com>
+ * @author  Explosive Brains Limited
  * @license http://sam.zoy.org/wtfpl/COPYING
  */
 
@@ -53,7 +53,6 @@ class ModelGenerator_Generator
 
     /**
      * Object constructor
-     *
      * Initialises our config.ini and application's application.ini
      *
      * @param string $configIniLocation
@@ -71,7 +70,7 @@ class ModelGenerator_Generator
 
         try {
             $this->_appConfig = new Zend_Config_Ini((string) $applicationIniLocation, 'development');
-            $dbConfig = $this->_appConfig->resources->db;
+            $dbConfig         = $this->_appConfig->resources->db;
         } catch(Exception $e) {
             $this->log('Could not read Your application\'s application.ini, used path "' . ((string) $configIniLocation) . '"');
             $this->_canRun = false;
@@ -103,9 +102,11 @@ class ModelGenerator_Generator
 
     /**
      * Logs message to defined Zend_Log writer
-     * @param string $message
-     * @param int $priority
+     *
+     * @param string     $message
+     * @param int        $priority
      * @param array|null $extras
+     *
      * @return ModelGenerator_Generator
      */
 
@@ -137,13 +138,13 @@ class ModelGenerator_Generator
                 : $this->_config->model;
 
             $namer = new ModelGenerator_Namer($moduleName, $tableName);
-            $dirs = $this->_prepareDirectories($namer, $moduleName);
+            $dirs  = $this->_prepareDirectories($namer, $moduleName);
 
             $options = array(
-                'tableName' => $tableName,
+                'tableName'  => $tableName,
                 'moduleName' => $moduleName,
-                'config' => $configContainer,
-                'docblock' => $this->_config->docblock,
+                'config'     => $configContainer,
+                'docblock'   => $this->_config->docblock,
             );
 
             // render and save base model class
@@ -176,7 +177,9 @@ class ModelGenerator_Generator
 
     /**
      * Checks if table exists in database
+     *
      * @param string $table
+     *
      * @return bool
      */
 
@@ -191,8 +194,10 @@ class ModelGenerator_Generator
 
     /**
      * Create directories if needed for each model entity and mapper
+     *
      * @param ModelGenerator_Namer $namer
-     * @param string $moduleName
+     * @param string               $moduleName
+     *
      * @return array
      */
 
@@ -205,10 +210,10 @@ class ModelGenerator_Generator
             : $this->_config->model;
 
         // try to create entities basepaths
-        $dirsToCreate['BaseModel'] = $namer->formatDirectory($container->base->basepath);
+        $dirsToCreate['BaseModel']  = $namer->formatDirectory($container->base->basepath);
         $dirsToCreate['BaseMapper'] = $namer->formatDirectory($container->baseMapper->basepath);
-        $dirsToCreate['Model'] = $namer->formatDirectory($container->basepath);
-        $dirsToCreate['Mapper'] = $namer->formatDirectory($container->mapper->basepath);
+        $dirsToCreate['Model']      = $namer->formatDirectory($container->basepath);
+        $dirsToCreate['Mapper']     = $namer->formatDirectory($container->mapper->basepath);
 
         $directoryPermissions = (!empty($this->_config->directory->permission))
             ? octdec($this->_config->directory->permission)
@@ -227,10 +232,11 @@ class ModelGenerator_Generator
 
     /**
      * Writes contents to file
+     *
      * @param string $contents
      * @param string $dir
      * @param string $filename
-     * @param bool $checkIfDoesNotExist
+     * @param bool   $checkIfDoesNotExist
      */
 
     private function saveFile($contents, $dir, $filename, $checkIfDoesNotExist = false)
@@ -245,8 +251,8 @@ class ModelGenerator_Generator
 
         file_put_contents($destination, $contents);
         chmod($destination, (!empty($this->_config->file->permission))
-            ? octdec($this->_config->file->permission)
-            : 0644
+                ? octdec($this->_config->file->permission)
+                : 0644
         );
     }
 }

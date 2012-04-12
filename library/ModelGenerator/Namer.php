@@ -2,8 +2,8 @@
 
 /**
  * Naming class
- * @author Laurynas Karvelis <laurynas.karvelis@gmail.com>
- * @author Explosive Brains Limited
+ * @author  Laurynas Karvelis <laurynas.karvelis@gmail.com>
+ * @author  Explosive Brains Limited
  * @license http://sam.zoy.org/wtfpl/COPYING
  */
 
@@ -23,7 +23,6 @@ class ModelGenerator_Namer
 
     /**
      * Constructor
-     *
      * Initialises module and table name
      *
      * @param $moduleName
@@ -33,12 +32,14 @@ class ModelGenerator_Namer
     public function __construct($moduleName, $tableName)
     {
         $this->_moduleName = $moduleName;
-        $this->_tableName = $tableName;
+        $this->_tableName  = $tableName;
     }
 
     /**
      * Format underscored string to CamelCased string
+     *
      * @param string $string
+     *
      * @return string
      */
 
@@ -46,7 +47,7 @@ class ModelGenerator_Namer
     {
         $tmp = explode('_', $string);
 
-        foreach ($tmp as &$id) {
+        foreach($tmp as &$id) {
             $id = ucfirst($id);
         }
 
@@ -57,7 +58,9 @@ class ModelGenerator_Namer
 
     /**
      * Format class name
+     *
      * @param string $pattern
+     *
      * @return string
      */
 
@@ -65,12 +68,12 @@ class ModelGenerator_Namer
     {
         return str_ireplace(
             array(
-                '<Module>',
-                '<Table>',
+                 '<Module>',
+                 '<Table>',
             ),
             array(
-                ucfirst($this->_moduleName),
-                ucfirst($this->formatUnderscoreToCamel($this->_tableName)),
+                 ucfirst($this->_moduleName),
+                 ucfirst($this->formatUnderscoreToCamel($this->_tableName)),
             ),
             $pattern
         );
@@ -78,7 +81,9 @@ class ModelGenerator_Namer
 
     /**
      * Format directory name
+     *
      * @param string $pattern
+     *
      * @return string
      */
 
@@ -86,21 +91,23 @@ class ModelGenerator_Namer
     {
         return str_ireplace(
             array(
-                '<application>',
-                '<module>',
-                '<Table>',
+                 '<application>',
+                 '<module>',
+                 '<Table>',
             ), array(
-                APPLICATION_PATH,
-                $this->_moduleName,
-                ucfirst($this->formatUnderscoreToCamel($this->_tableName)),
-            ),
+                    APPLICATION_PATH,
+                    $this->_moduleName,
+                    ucfirst($this->formatUnderscoreToCamel($this->_tableName)),
+               ),
             $pattern
         );
     }
 
     /**
      * Format file name
+     *
      * @param string $pattern
+     *
      * @return string
      */
 
@@ -108,19 +115,21 @@ class ModelGenerator_Namer
     {
         return str_ireplace(
             array(
-                '<Module>',
-                '<Table>',
+                 '<Module>',
+                 '<Table>',
             ), array(
-                ucfirst($this->formatUnderscoreToCamel($this->_moduleName)),
-                ucfirst($this->formatUnderscoreToCamel($this->_tableName)),
-            ),
+                    ucfirst($this->formatUnderscoreToCamel($this->_moduleName)),
+                    ucfirst($this->formatUnderscoreToCamel($this->_tableName)),
+               ),
             $pattern
         );
     }
 
     /**
      * Formats method name
+     *
      * @param string $string
+     *
      * @return string
      */
 

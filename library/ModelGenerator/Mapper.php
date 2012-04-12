@@ -2,8 +2,8 @@
 
 /**
  * Mapper generator
- * @author Laurynas Karvelis <laurynas.karvelis@gmail.com>
- * @author Explosive Brains Limited
+ * @author  Laurynas Karvelis <laurynas.karvelis@gmail.com>
+ * @author  Explosive Brains Limited
  * @license http://sam.zoy.org/wtfpl/COPYING
  */
 
@@ -29,18 +29,17 @@ class ModelGenerator_Mapper
 
     /**
      * Constructor
-     *
      * Initialises options and assigns ModelGenerator_Namer to itself
      *
-     * @param array $options
+     * @param array                $options
      * @param ModelGenerator_Namer $namer
      */
 
     public function __construct(array $options, ModelGenerator_Namer $namer)
     {
         $this->_options = $options;
-        $this->_config = $options['config'];
-        $this->_namer = $namer;
+        $this->_config  = $options['config'];
+        $this->_namer   = $namer;
     }
 
     /**
@@ -62,28 +61,34 @@ class ModelGenerator_Mapper
     {
         $table = new ModelGenerator_Table_Table($this->_options['tableName']);
 
-        $className = $this->_getNamer()->formatClassName($this->_config->mapper->classname);
+        $className           = $this->_getNamer()->formatClassName($this->_config->mapper->classname);
         $baseMapperClassName = $this->_getNamer()->formatClassName($this->_config->baseMapper->classname);
 
         $templates = array(
             'tags' => array(),
         );
 
-        foreach ($this->_options['docblock'] as $tag => $value)
-            $templates['tags'][] = array('name' => $tag, 'description' => $value);
+        foreach($this->_options['docblock'] as $tag => $value)
+            $templates['tags'][] = array(
+                'name'        => $tag,
+                'description' => $value
+            );
 
-        $mapperTable = new Zend_CodeGenerator_Php_Class(array(
-            'name' => $className,
-            'docblock' => new Zend_CodeGenerator_Php_Docblock(array(
-                'shortDescription' => $className . PHP_EOL . 'Put your custom methods in this file.',
-                'tags' => array_merge($templates['tags']),
-            )),
-            'extendedClass' => $baseMapperClassName,
-        ));
+        $mapperTable = new Zend_CodeGenerator_Php_Class(
+            array(
+                 'name'          => $className,
+                 'docblock'      => new Zend_CodeGenerator_Php_Docblock(
+                     array(
+                          'shortDescription' => $className . PHP_EOL . 'Put your custom methods in this file.',
+                          'tags'             => array_merge($templates['tags']),
+                     )),
+                 'extendedClass' => $baseMapperClassName,
+            ));
 
-        $mapperTableFile = new Zend_CodeGenerator_Php_File(array(
-            'classes' => array($mapperTable),
-        ));
+        $mapperTableFile = new Zend_CodeGenerator_Php_File(
+            array(
+                 'classes' => array($mapperTable),
+            ));
 
         return $mapperTableFile->generate();
     }
