@@ -86,6 +86,22 @@ class ModelGenerator_BaseModel
                 'description' => $property['type'] . ' $' . $property['name'] . ' ' . $property['desc']
             );
 
+            switch($property['type']) {
+                case 'string':
+                    $property['defaultValue'] = '';
+                    break;
+
+                case 'int':
+                case 'float':
+                case 'double':
+                    $property['defaultValue'] = null;
+                    break;
+
+                default:
+                    $property['defaultValue'] = '';
+                    break;
+            }
+
             $properties[] = new Zend_CodeGenerator_Php_Property(
                 array(
                      'name'       => '_' . $property['name'],
@@ -98,6 +114,7 @@ class ModelGenerator_BaseModel
                                   ),
                               ),
                          )),
+                     'defaultValue' => $property['defaultValue'],
                      'visibility' => 'private',
                 ));
 
